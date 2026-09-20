@@ -3,6 +3,8 @@ import { Component } from 'inferno';
 import Input from 'dmn-js-shared/lib/components/Input';
 import InputSelect from 'dmn-js-shared/lib/components/InputSelect';
 
+import { getTypeRefOptions } from 'dmn-js-shared/lib/util/TypeRefUtil';
+
 
 export default class LiteralExpressionPropertiesComponent extends Component {
   constructor(props, context) {
@@ -73,12 +75,9 @@ export default class LiteralExpressionPropertiesComponent extends Component {
 
     const decision = this._viewer.getDecision();
 
-    const typeRefOptions = this._dataTypes.getAll(decision).map(t => {
-      return {
-        label: this._translate(t),
-        value: t
-      };
-    });
+    const typeRefOptions = getTypeRefOptions(
+      this._dataTypes, decision, this._translate
+    );
 
     return (
       <div className="literal-expression-properties">
@@ -101,6 +100,8 @@ export default class LiteralExpressionPropertiesComponent extends Component {
                 <InputSelect
                   label={ this._translate('Variable type') }
                   onChange={ this.setVariableType }
+                  searchable
+                  emptyLabel={ this._translate('No matching types') }
                   options={ typeRefOptions }
                   value={ typeRef }
                   className="variable-type-select dms-block" />
